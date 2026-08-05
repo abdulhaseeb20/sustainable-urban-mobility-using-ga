@@ -1,0 +1,8 @@
+<routes>
+    <!-- Define the physical properties of our cars -->
+    <vType id="standard_car" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger"/>
+    
+    <!-- Create continuous flows of vehicles passing through the center -->
+    <flow id="flow_North_South" type="standard_car" begin="0" end="3600" probability="0.1" from="top_to_center" to="center_to_bottom"/>
+    <flow id="flow_East_West" type="standard_car" begin="0" end="3600" probability="0.15" from="right_to_center" to="center_to_left"/>
+</routes>

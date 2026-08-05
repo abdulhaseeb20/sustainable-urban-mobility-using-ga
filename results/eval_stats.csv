@@ -1,0 +1,3 @@
+metric,baseline_mean,ga_mean,improvement_pct,threshold_pct,wilcoxon_stat,p_value,rank_biserial,passes
+waiting_time,78633.4,75270.6,4.276554237766635,15.0,10.0,0.3125,0.3333333333333333,False
+co2,51400231.78442841,50916254.75049484,0.9415853141739962,10.0,9.0,0.40625,0.2,False

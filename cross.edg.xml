@@ -1,0 +1,15 @@
+<edges>
+    <!-- North/South Roads -->
+    <edge id="top_to_center" from="top" to="center" priority="1" numLanes="2" speed="13.89"/>
+    <edge id="center_to_top" from="center" to="top" priority="1" numLanes="2" speed="13.89"/>
+    
+    <edge id="bottom_to_center" from="bottom" to="center" priority="1" numLanes="2" speed="13.89"/>
+    <edge id="center_to_bottom" from="center" to="bottom" priority="1" numLanes="2" speed="13.89"/>
+
+    <!-- East/West Roads -->
+    <edge id="left_to_center" from="left" to="center" priority="1" numLanes="2" speed="13.89"/>
+    <edge id="center_to_left" from="center" to="left" priority="1" numLanes="2" speed="13.89"/>
+    
+    <edge id="right_to_center" from="right" to="center" priority="1" numLanes="2" speed="13.89"/>
+    <edge id="center_to_right" from="center" to="right" priority="1" numLanes="2" speed="13.89"/>
+</edges>
