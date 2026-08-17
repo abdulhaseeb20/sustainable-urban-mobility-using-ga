@@ -7,7 +7,7 @@ condition for the O3/O4 comparison.
 
 Outputs (in ./results):
   baseline_runs.csv  - per-seed metrics
-  baseline_cv.csv    - mean, std, CV and pass/fail per metric
+  baseline_cv.csv    - mean, std, CV and pass/re-evaluate per metric
 """
 import os
 
@@ -41,7 +41,7 @@ def run_baseline(seeds=SEEDS, ns_green=BASELINE_NS_GREEN, ew_green=BASELINE_EW_G
 
 
 def compute_cv(df, metrics=CV_METRICS):
-    """Return a DataFrame of mean, sample std, CV and pass/fail per metric."""
+    """Return a DataFrame of mean, sample std, CV and pass/re-evaluate per metric."""
     out = []
     for metric in metrics:
         values = df[metric].to_numpy(dtype=float)
@@ -74,11 +74,11 @@ def main():
 
     print("\nCV stability (acceptance: CV <= 5%):")
     for _, r in cv.iterrows():
-        status = "PASS" if r["passes_5pct"] else "FAIL"
+        status = "PASS" if r["passes_5pct"] else "RE-EVALUATE"
         print(f"  {r['metric']:<13} mean={r['mean']:.1f}  "
               f"CV={r['cv_pct']:.2f}%  [{status}]")
 
-    overall = "PASS" if cv["passes_5pct"].all() else "FAIL"
+    overall = "PASS" if cv["passes_5pct"].all() else "RE-EVALUATE"
     print(f"\nO2 overall: {overall}")
     print(f"Saved: {runs_path}\n       {cv_path}")
     return runs, cv

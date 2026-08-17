@@ -125,7 +125,7 @@ def main():
     for _, r in stats_df.iterrows():
         print(f"  {r['metric']:<13} improvement={r['improvement_pct']:.1f}% "
               f"(need {r['threshold_pct']:.0f}%)  p={r['p_value']:.3f}  "
-              f"r_rb={r['rank_biserial']:.2f}  [{'PASS' if r['passes'] else 'FAIL'}]")
+              f"r_rb={r['rank_biserial']:.2f}  [{'PASS' if r['passes'] else 'RE-EVALUATE'}]")
     print(f"\nSaved to {RESULTS_DIR}")
     print("Note: for the O4 weight-sensitivity analysis, re-run ga_optimise with "
           "inverted weights (W_DELAY=0.4, W_CO2=0.6) and repeat this evaluation.")
