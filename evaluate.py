@@ -9,7 +9,7 @@ Acceptance (O4): >=15% delay and >=10% CO2 reduction, both at p < 0.05.
 
 Outputs (in ./results):
   eval_paired_runs.csv - per-seed metrics for both conditions
-  eval_stats.csv       - per-metric improvement, Wilcoxon p, effect size, pass/fail
+  eval_stats.csv       - per-metric improvement, Wilcoxon p, effect size, pass/re-evaluate
   eval_boxplots.png    - delay & CO2 box plots (baseline vs GA)
 """
 import os
