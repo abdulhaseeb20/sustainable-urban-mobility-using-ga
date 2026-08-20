@@ -45,6 +45,8 @@ creator.create("Individual", list, fitness=creator.FitnessMin)
 
 _eval_counter = 0  # unique TraCI label per evaluation
 
+TOTAL_CYCLE_TIME = BASELINE_NS_GREEN + BASELINE_EW_GREEN + 6  # 6 s for yellow
+
 
 def _clamp(individual):
     for i, gene in enumerate(individual):
@@ -58,11 +60,19 @@ def make_evaluator(base_delay, base_co2, seed=TRAIN_SEED):
         global _eval_counter
         _eval_counter += 1
         ns, ew = _clamp(individual)
+        # debug line
+        print(f"Evaluating plan [{ns},{ew}] (eval {_eval_counter})")
         m = run_simulation(ns, ew, seed=seed, label=f"ga{_eval_counter}")
         norm_delay = m["waiting_time"] / base_delay
         norm_co2 = m["co2"] / base_co2
         fitness = W_DELAY * norm_delay + W_CO2 * norm_co2
+
+        # Apply a penalty for cycle times that are too short to be realistic
+        if TOTAL_CYCLE_TIME < 40:
+            fitness += 2.0  # Adds a massive penalty, forcing the GA to reject it
+            
         return (fitness,)
+    
     return evaluate
 
 
@@ -74,7 +84,11 @@ def build_toolbox(evaluate):
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("evaluate", evaluate)
     toolbox.register("mate", tools.cxBlend, alpha=0.5)
-    toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=6, indpb=0.5)
+    # toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=6, indpb=0.5)
+
+    # low/up: The bounds for green light timings (e.g., 10s to 60s)
+    # indpb: The probability that EACH specific gene (NS or EW) gets mutated
+    toolbox.register("mutate", tools.mutUniformInt, low=10, up=60, indpb=0.5)
     toolbox.register("select", tools.selTournament, tournsize=3)
     # Keep genes valid after variation.
     toolbox.decorate("mate", _clamp_decorator)
