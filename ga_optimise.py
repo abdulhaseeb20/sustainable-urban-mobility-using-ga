@@ -54,6 +54,25 @@ def _clamp(individual):
     return individual
 
 
+def mutate_timings(individual, min_val, max_val, max_step, indpb):
+    """
+    Nudges timings by a random amount up to max_step, keeping them within min/max bounds.
+    """
+    for i in range(len(individual)):
+        if random.random() < indpb:
+            # Generate a random nudge, e.g., -5, 2, 4
+            step = random.randint(-max_step, max_step)
+            individual[i] += step
+            
+            # Enforce hard boundaries so the simulator doesn't crash
+            if individual[i] < min_val:
+                individual[i] = min_val
+            elif individual[i] > max_val:
+                individual[i] = max_val
+                
+    return (individual,)  # DEAP requires returning a tuple
+
+
 def make_evaluator(base_delay, base_co2, seed=TRAIN_SEED):
     """Return a DEAP evaluate() closure using the given baseline normalisers."""
     def evaluate(individual):
@@ -61,7 +80,7 @@ def make_evaluator(base_delay, base_co2, seed=TRAIN_SEED):
         _eval_counter += 1
         ns, ew = _clamp(individual)
         # debug line
-        print(f"Evaluating plan [{ns},{ew}] (eval {_eval_counter})")
+        # print(f"Evaluating plan [{ns},{ew}] (eval {_eval_counter})")
         m = run_simulation(ns, ew, seed=seed, label=f"ga{_eval_counter}")
         norm_delay = m["waiting_time"] / base_delay
         norm_co2 = m["co2"] / base_co2
@@ -88,7 +107,10 @@ def build_toolbox(evaluate):
 
     # low/up: The bounds for green light timings (e.g., 10s to 60s)
     # indpb: The probability that EACH specific gene (NS or EW) gets mutated
-    toolbox.register("mutate", tools.mutUniformInt, low=10, up=60, indpb=0.5)
+    # toolbox.register("mutate", tools.mutUniformInt, low=10, up=60, indpb=0.5)
+    # Register the custom mutator in your toolbox
+    toolbox.register("mutate", mutate_timings, min_val=10, max_val=60, max_step=5, indpb=0.5)
+
     toolbox.register("select", tools.selTournament, tournsize=3)
     # Keep genes valid after variation.
     toolbox.decorate("mate", _clamp_decorator)
