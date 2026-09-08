@@ -46,9 +46,9 @@ def _sumo_binary(gui):
     name = "sumo-gui.exe" if gui else "sumo.exe"
     return os.path.join(os.environ["SUMO_HOME"], "bin", name)
 
-
+# can be run with GUI: just add a parameter gui=True to run with GUI
 def run_simulation(ns_green, ew_green, seed=42, gui=False, max_steps=3600,
-                   label="default"):
+                   label="default", dump_file=None):
     """Run one simulation and return a metrics dict.
 
     Returns
@@ -72,6 +72,8 @@ def run_simulation(ns_green, ew_green, seed=42, gui=False, max_steps=3600,
         "--no-warnings", "true",
         "--duration-log.disable", "true",
     ]
+    if dump_file:
+        cmd.extend(["-a", dump_file])
     if gui:
         cmd.append("--start")
 
